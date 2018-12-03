@@ -26,15 +26,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/xml'] } }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //    compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
+    // https://mvnrepository.com/artifact/commons-logging/commons-logging
+    // https://mvnrepository.com/artifact/commons-logging/commons-logging
+    // https://mvnrepository.com/artifact/org.slf4j/jcl-over-slf4j
+    //    compile group: 'com.baidu.aip', name: 'java-sdk', version: '4.5.0'
+    // https://mvnrepository.com/artifact/org.json/json
+    //    compile group: 'org.json', name: 'json', version: '20180130'
+    compile 'commons-codec:commons-codec:1.11'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'commons-httpclient:commons-httpclient:3.1'
+    compile 'commons-logging:commons-logging:1.2'
+    compile 'org.slf4j:jcl-over-slf4j:1.7.12'
     compile 'com.android.support:appcompat-v7:28.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.alibaba:fastjson:1.2.10'
+    compile 'junit:junit:4.12'
+    compile 'com.ashokvarma.android:bottom-navigation-bar:0.9.5'
+    compile 'com.android.support:support-v4:28.+'
     testCompile 'junit:junit:4.12'
 }

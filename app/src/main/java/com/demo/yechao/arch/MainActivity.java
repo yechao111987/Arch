@@ -13,6 +13,8 @@ import com.alibaba.fastjson.JSON;
 import com.demo.yechao.arch.activity.Main2Activity;
 import com.demo.yechao.arch.vo.PayInfo;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView result_view;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText percents_text;
     private EditText nums_text;
     private EditText rate_text;
+    private EditText houseFund_text;
+    private EditText month_text;
 
     private Button button;
     private Button button_next;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initEditText();
         initButton();
         initView();
@@ -41,18 +46,30 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                double rate = Double.parseDouble(rate_text.getText().toString());
+                DecimalFormat df = new DecimalFormat(".00");
+                double rate = Double.parseDouble(rate_text.getText().toString()) / 1000;
+                Log.d("rate", String.valueOf(rate));
                 double area = Double.parseDouble(area_text.getText().toString());
                 double price = Double.parseDouble(price_text.getText().toString());
-                double percent = Double.parseDouble(percents_text.getText().toString());
+                double percent = Double.parseDouble(percents_text.getText().toString()) / 10;
+                double nums = Double.parseDouble(nums_text.getText().toString());
+                double houseFund = Double.parseDouble(houseFund_text.getText().toString());
+                Log.d("percent", String.valueOf(percent));
                 double principal = area * price * (1 - percent);
-                int months = 360;
+                Log.d("principal", String.valueOf(principal));
+                int months = Integer.parseInt(month_text.getText().toString());
                 PayInfo payInfo = null;
+                PayInfo payInfo_house = null;
+//                DecimalFormat df1 = new DecimalFormat(".000000");
+//                Double temp = rate * nums;
+////                double rate_new = Double.valueOf(df1.format(temp));
                 if (radio_pricipal.isChecked()) {
-                    payInfo = Test.calculateEqualPrincipal(principal, months, rate / 1.2, 1);
+                    payInfo = Test.calculateEqualPrincipal(principal - houseFund, months, rate * nums, 1);
+                    payInfo_house = Test.calculateEqualPrincipal(houseFund, months, 0.00325, 1);
                 } else {
                     if (radio_interest.isChecked()) {
-                        payInfo = Test.calculateEqualPrincipalAndInterest(principal, months, rate / 1.2, 1);
+                        payInfo = Test.calculateEqualPrincipalAndInterest(principal - houseFund, months, rate * nums, 1);
+                        payInfo_house = Test.calculateEqualPrincipalAndInterest(houseFund, months, 0.00325, 1);
 
                     } else {
                         Toast.makeText(MainActivity.this, "please choose payment method!", Toast.LENGTH_LONG).show();
@@ -61,12 +78,16 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d("principal", String.valueOf(principal));
                 Toast.makeText(MainActivity.this, "calucate Success!", Toast.LENGTH_SHORT).show();
-                CharSequence res = new StringBuffer(JSON.toJSONString(payInfo));
+                String payStr = "贷款总额:" + df.format(payInfo.getPrincipal() + payInfo_house.getPrincipal()) + "\n" +
+//                        "总本金:" + df.format(payInfo.getPrincipal()) + "\n" +
+//                        "总利息:" + df.format(payInfo.getInterest()) + "\n" +
+                        "首月还款额:" + df.format(payInfo.getPayPerMonth() + payInfo_house.getPayPerMonth());
+                CharSequence res = new StringBuffer(payStr);
                 result_view.setText(res);
             }
         });
 //        textView.append("123456789");
-        Log.d("button_next",button_next.toString());
+        Log.d("button_next", button_next.toString());
 
         button_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
         percents_text = findViewById(R.id.paypercent_text);
         nums_text = findViewById(R.id.num_text);
         rate_text = findViewById(R.id.rate_text);
+        houseFund_text = findViewById(R.id.houseFund_text);
+        month_text = findViewById(R.id.month_text);
 
     }
 

@@ -15,6 +15,15 @@ import java.util.ArrayList;
 public class Test {
 
 
+    /**
+     * 等额本金
+     *
+     * @param principal
+     * @param months
+     * @param rate
+     * @param current_month
+     * @return
+     */
     public static PayInfo calculateEqualPrincipal(double principal, int months, double rate, int current_month) {
         double capital_per_month = principal / months;
         double interest = (principal - (current_month - 1) * capital_per_month) * rate / 1.2;
@@ -56,10 +65,10 @@ public class Test {
      * @return
      */
     public static PayInfo calculateEqualPrincipalAndInterest(double principal, int months, double rate, int current_month) {
-        ArrayList<Double> data = new ArrayList<Double>();
         PayInfo payInfo = new PayInfo();
         double monthRate = rate / 1.2;//月利率
-        double preLoan = (principal * monthRate * Math.pow((1 + monthRate), months)) / (Math.pow((1 + monthRate), months) - 1);//每月还款金额
+        //每月还款金额
+        double preLoan = (principal * monthRate * Math.pow((1 + monthRate), months)) / (Math.pow((1 + monthRate), months) - 1);
         double totalMoney = preLoan * months;//还款总额
         double interest = totalMoney - principal;//还款总利息
         payInfo.setPrincipal(principal);
@@ -72,18 +81,18 @@ public class Test {
     }
 
     public static void main(String[] ars) {
-        double sum = 1500000;
-        double rate = 0.0049;
+        double sum = 89 * 20000 * 0.7;
+        double rate = 0.0049 ;
         int period = 360;
 //        double total = Test.calTotal(sum, rate, period);
-        PayInfo payInfo = calculateEqualPrincipalAndInterest(sum, period, rate, 2);
+        PayInfo payInfo = calculateEqualPrincipalAndInterest(sum, period, rate, 1);
         System.out.println(JSON.toJSONString(payInfo));
 
 //        System.out.println("Total is " + total);
 
-        PayInfo payInfo1 = calculateEqualPrincipal(sum, period, rate, 100);
-
-        System.out.println(JSON.toJSONString(payInfo1));
+//        PayInfo payInfo1 = calculateEqualPrincipal(sum, period, rate, 1);
+//
+//        System.out.println(JSON.toJSONString(payInfo1));
 
 
     }
